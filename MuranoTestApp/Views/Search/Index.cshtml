@@ -1,23 +1,36 @@
 ﻿@model SearchDTO
 @{
-    ViewData["Title"] = "Basic search";
 
 }
 
-
-<div class="row">
-    <div class="nav-btn"><b>Search in web</b></div>
-    <div class="nav-btn"><a asp-action="Saved" asp-controller="Search">Search in saved</a></div>
-</div>
-<form class="searchbar" asp-controller="Search" asp-action="Index" method="post">
-    <input type="text" asp-for="Query" />
-    <input type="submit" value="Go">
-</form>
-@if (Model != null)
-{
+<div class="main">
+    <div class="row">
+        @if (ViewBag.Search == true)
+        {
+            <a class="nav-btn"><b>Search in web</b></a>
+            <a class="nav-btn" asp-controller="Search" asp-action="Saved">Search in saved</a>
+        }
+        else
+        {
+            <a class="nav-btn" asp-controller="Search" asp-action="Index">Search in web</a>
+            <a class="nav-btn"><b>Search in saved</b></a>
+        }
+    </div>
+    <form class="searchbar" asp-controller="Search" asp-action="@(ViewBag.Search == true ? "Index" : "Saved")" method="post">
+        <input type="text" asp-for="Query" value="@Model?.Query" />
+        <input type="submit" value="Go">
+    </form>
     @if (Model.Results != null && Model.Results.Any())
     {
         <div class="results">
+            @if (ViewBag.Search == true)
+            {
+                <div style="font-size: xx-large;">Results for: @Model?.Query</div>
+            }
+            else
+            {
+                <div style="font-size: xx-large;">Saved results for: @Model?.Query</div>
+            }
             @foreach (var item in Model.Results)
             {
                 <div class="result">
@@ -29,9 +42,9 @@
     else
     {
         <div class="results">
-            <div class="result" style="text-align:center">
+            <div>
                 No results.
             </div>
         </div>
     }
-}
+</div>

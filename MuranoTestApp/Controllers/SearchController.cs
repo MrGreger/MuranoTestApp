@@ -24,13 +24,21 @@ namespace MuranoTestApp.Controllers
         [HttpGet]
         public IActionResult Index()
         {
+            ViewBag.Search = true;
             return View(new SearchDTO());
         }
 
         [HttpPost]
         public async Task<IActionResult> Index(string query)
         {
+            if (query == null)
+            {
+                return View(new SearchDTO());
+            }
+
             var results = await _searchService.SearchAsync(query);
+
+            ViewBag.Search = true;
 
             if (results != null)
             {
@@ -41,28 +49,37 @@ namespace MuranoTestApp.Controllers
             {
                 return View(new SearchDTO(query, new List<SearchResultDTO>()));
             }
-           
+
         }
 
         [HttpGet]
         public IActionResult Saved()
         {
-            return View(new SearchDTO());
+            ViewBag.Search = false;
+
+            return View("Index", new SearchDTO());
         }
 
         [HttpPost]
         public IActionResult Saved(string query)
         {
+            if (query == null)
+            {
+                return View("Index", new SearchDTO());
+            }
+
             var results = _searchService.GetSaved(query);
+
+            ViewBag.Search = false;
 
             if (results != null)
             {
                 var dtos = results.Select(x => _mapper.Map<SearchResult, SearchResultDTO>(x));
-                return View(new SearchDTO(query, dtos));
+                return View("Index", new SearchDTO(query, dtos));
             }
             else
             {
-                return View(new SearchDTO(query, new List<SearchResultDTO>()));
+                return View("Index", new SearchDTO(query, new List<SearchResultDTO>()));
             }
 
         }
