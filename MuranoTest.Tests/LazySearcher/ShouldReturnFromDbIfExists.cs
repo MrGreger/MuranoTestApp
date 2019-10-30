@@ -25,7 +25,8 @@ namespace MuranoTest.Tests.LazySearcher
 
             var result = service.SearchAsync("hello world").GetAwaiter().GetResult();
 
-            Assert.IsTrue(!result.Any(x => x.Title.Contains("first searher")) && !result.Any(x => x.Title.Contains("second searcher")));
+            Assert.IsFalse(result.Any(x => x.Title.Contains("first searher")));
+            Assert.IsFalse(result.Any(x => x.Title.Contains("second searcher")));
         }
     }
 }

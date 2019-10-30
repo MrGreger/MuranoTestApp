@@ -26,8 +26,8 @@ namespace MuranoTest.Tests.DefaultSearcher
 
             var result = service.SearchAsync("hello world").GetAwaiter().GetResult();
 
-            Assert.IsTrue(result.All(x => x.Title.Contains("fastest searcher"))
-                       && service.GetSaved("hello world").All(x => x.Title.Contains("fastest searcher")));
+            Assert.IsTrue(service.GetSaved("hello world").All(x => x.Title.Contains("fastest searcher")));
+            Assert.IsTrue(result.All(x => x.Title.Contains("fastest searcher")));
         }
     }
 }
